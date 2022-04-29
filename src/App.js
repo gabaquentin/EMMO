@@ -1,25 +1,55 @@
-import logo from './logo.svg';
-import './App.css';
+import React, {useEffect, useState} from 'react';
+import {
+    BrowserRouter,
+    Routes,
+    Route,
+} from "react-router-dom";
+import { AuthProvider } from "./contexts/authContext";
+import { UserProvider } from "./contexts/user/userContext";
 
-function App() {
+// Transition between pages
+import {CSSTransition, TransitionGroup} from "react-transition-group";
+
+// Private route
+import PrivateRoute from './privateRoute'
+
+// Preloader
+import Preloader from './components/layouts/preloader';
+
+// Not Found
+import NotFound from './components/layouts/notFound';
+
+// Layout
+import Header from "./components/layouts/header";
+import Login from "./components/layouts/authentication/login";
+
+// Pages
+import Home from "./components/pages/home";
+
+
+const  App = () => {
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+        <Preloader />
+        <AuthProvider>
+            <UserProvider>
+                <div id="main">
+                    <Header/>
+                    <TransitionGroup>
+                        <CSSTransition timeout={300} classNames="fade">
+                            <Routes>
+                                <Route index element={<Home />} />
+                                <Route path="*" element={<NotFound />} />
+                            </Routes>
+                        </CSSTransition>
+                    </TransitionGroup>
+                </div>
+            </UserProvider>
+        </AuthProvider>
+    </>
+
   );
-}
+};
 
 export default App;
